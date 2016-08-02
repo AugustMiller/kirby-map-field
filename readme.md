@@ -62,13 +62,13 @@ These options will be overridden by any set on individual fields. Without either
 
 ## Keys
 
-Google recently announced that all usage must be accompanied by a valid [browser key](https://developers.google.com/maps/documentation/javascript/get-api-key). That means that in order to use the maps API, you must apply for a key in Google's Developer Console/API Manager, and add it to your installation's configuration file:
+Google recently announced that all usage must be accompanied by a valid [browser key](https://developers.google.com/maps/documentation/javascript/get-api-key). This means that in order to use the Maps and Geocoding APIs, you must apply for a key in Google's Developer Console/API Manager, and add it to your installation's configuration file:
 
 ```php
 c::set('map.key', 'your-browser-key');
 ```
 
-Access to the Maps API is free up to 25,000 loads per day.
+Access to the Maps API is free up to 25,000 loads per day. Be aware that you will need to manually enable _both_ the JS Maps API _and_ the Geocoding API individually.
 
 ## Usage
 
