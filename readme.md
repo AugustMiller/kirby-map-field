@@ -22,14 +22,14 @@ Unfortunately, this isn't one of the many fields available to us, out of the box
 
 If you like the command line, adding this to your project is super easy.
 
-Be sure you have a `fields` folder in your `site` folder, then:
+Be sure you have a `plugins` folder in your `site` folder, then:
 
 ```sh
 cd /path/to/your/project
 git submodule add https://github.com/AugustMiller/kirby-map-field.git site/plugins/map
 ```
 
-It's important that the folder be named `map`, because kirby looks for the field class's definition in a PHP file with the same name as the folder.
+It's important that the folder be named `map`, because kirby looks for the plugin class's definition in a PHP file with the same name as the folder.
 
 You can also directly [download](https://github.com/AugustMiller/kirby-map-field/archive/master.zip) an archive of the current project state, rename the folder to `map`, and add it to the `site/plugins` folder of your project.
 
