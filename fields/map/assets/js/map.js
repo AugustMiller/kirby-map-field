@@ -50,7 +50,7 @@
         }
       })(this)
     })
-  }
+  };
 
   Loader.prototype.dequeue = function () {
     for (var q = this.queue.length - 1; q >= 0; q--) {
@@ -161,7 +161,7 @@
       lat: parseFloat(this.location_fields.lat.val()),
       lng: parseFloat(this.location_fields.lng.val())
     }));
-  }
+  };
 
   loader = new Loader();
 
