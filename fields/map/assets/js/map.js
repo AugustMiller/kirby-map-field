@@ -84,8 +84,13 @@
           lat: parseFloat(this.location_fields.lat.val() || this.map_canvas.data('lat')),
           lng: parseFloat(this.location_fields.lng.val() || this.map_canvas.data('lng'))
         },
+        zoom: this.map_canvas.data('zoom') || 6,
         disableDefaultUI: true,
-        zoom: this.map_canvas.data('zoom') || 6
+        scrollwheel: false,
+        zoomControl: true,
+        zoomControlOptions: {
+          position: google.maps.ControlPosition.LEFT_TOP
+        }
       }
     };
 
