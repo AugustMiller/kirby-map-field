@@ -1,4 +1,4 @@
-<?php class MapField extends TextField {
+<?php class MapField extends InputField {
   public function __construct() {
     $this->type = 'map';
     $this->icon = 'map-marker';
