@@ -36,40 +36,35 @@
     $field->addClass('field-multipart field-map cf');
 
     # Add each
-    $field->append($this->input_location());
+    $field->append($this->input());
     $field->append($this->button_search());
     $field->append($this->map());
     $field->append($this->input_lat());
     $field->append($this->input_lng());
-    $field->append($this->input_serialized());
 
     # Concatenate & Return
     return $field;
   }
 
+  # Location Input & Search
   public function input () {
     # Use `BaseField`'s setup
     $input = parent::input();
 
     # Provide a hook for the Panel's form initialization. This is a jQuery method, defined in assets/js/map.js
     $input->data('field', 'mapField');
-    return $input;
-  }
 
-  # Location Input & Search
-  private function input_location () {
     # Container
     $location_container = new Brick('div');
     $location_container->addClass('field-content input-map');
 
     # Field
-    $location_input = new Brick('input');
-    $location_input->addClass('input input-address');
-    $location_input->attr('placeholder', $this->placeholder);
-    $location_input->val($this->pick('address'));
+    $input->addClass('input-address');
+    $input->attr('name', $this->name() . '[address]');
+    $input->val($this->pick('address'));
 
     # Combine & Ship It
-    $location_container->append($location_input);
+    $location_container->append($input);
     $location_container->append($this->icon());
 
     return $location_container;
@@ -103,6 +98,7 @@
     $lat_input = new Brick('input');
     $lat_input->attr('tabindex', '-1');
     $lat_input->attr('readonly', true);
+    $lat_input->attr('name', $this->name() . '[lat]');
     $lat_input->addClass('input input-split-left input-is-readonly map-lat');
     $lat_input->attr('placeholder', l::get('fields.map.latitude', 'Latitude'));
     $lat_input->val($this->pick('lat'));
@@ -123,6 +119,7 @@
     $lng_input = new Brick('input');
     $lng_input->attr('tabindex', '-1');
     $lng_input->attr('readonly', true);
+    $lng_input->attr('name', $this->name() . '[lng]');
     $lng_input->addClass('input input-split-right input-is-readonly map-lng');
     $lng_input->attr('placeholder', l::get('fields.map.longitude', 'Longitude'));
     $lng_input->val($this->pick('lng'));
@@ -135,30 +132,12 @@
 
   # Map
   public function map () {
-    # Wrapper
     $map_content = new Brick('div');
     $map_content->addClass('field-content field-google-map-ui input');
     $map_content->data($this->center);
     $map_content->data('key', $this->key);
 
     return $map_content;
-  }
-
-
-  # Serialized Input
-  private function input_serialized () {
-    # Wrapper
-    $serialized_content = new Brick('div');
-    $serialized_content->addClass('field-hidden field-serialized');
-
-    # Field (Hidden: Users shouldn't be able to manipulate the JSON we'll store in here)
-    $serialized_input = $this->input();
-    $serialized_input->attr('type', 'hidden');
-
-    # Combine & Ship It
-    $serialized_content->append($serialized_input);
-
-    return $serialized_content;
   }
 
   public function pick ($key = null) {
@@ -171,20 +150,16 @@
   }
 
   public function value() {
-    # Convert YAML "string" to Array
     return (array)yaml::decode($this->value);
   }
 
   public function result() {
-    # Get Incoming data (Serialized JSON)
+    # Get Incoming data, which should be a nested object containing `lat`, `lng` and `address` properties
     $input = parent::result();
 
-    # Decode
-    $data = json_decode($input);
+    # Store as Yaml.
+    return yaml::encode($input);
 
-    # Re-encode for human-readability in content files
-    return yaml::encode($data);
-
-    # This ends up as a text block when stored inside a Structure field. Really, it's plain text anywhere it's stored— but the effect is only noticeable there. The truth is that Structure fields are stored as "plain text," as-is, which may be the only way to legitimately implement nested structures For example, how do we "stop" YAML from being parsed at a certain hierarchical level?
+    # This ends up as a text block when stored inside a Structure field. Really, it's plain text anywhere it's stored— but the effect is only noticeable there. The truth is that Structure fields are stored as "plain text," as-is, which may be the only way to legitimately implement nested structures. For example, how do we "stop" YAML from being parsed at a certain hierarchical level?
   }
 }
