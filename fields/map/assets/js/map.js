@@ -105,7 +105,6 @@
       map: this.map,
       draggable: true
     });
-    this.store();
     this.listen();
   };
 
@@ -118,8 +117,6 @@
           e.preventDefault();
           e.stopPropagation();
           _map.geocode();
-        } else {
-          _map.store();
         }
       }
     })(this));
@@ -146,7 +143,6 @@
           _map.update_position();
         } else {
           alert('Sorry, the location couldn’t be found.');
-          _map.store();
         }
       }
     })(this));
@@ -157,15 +153,6 @@
     this.location_fields.lng.val(this.geocode_result.lng());
     this.pin.setPosition(this.geocode_result);
     this.map.panTo(this.geocode_result);
-    this.store();
-  };
-
-  MapField.prototype.store = function () {
-    this.field.val(JSON.stringify({
-      address: this.location_fields.address.val(),
-      lat: parseFloat(this.location_fields.lat.val()),
-      lng: parseFloat(this.location_fields.lng.val())
-    }));
   };
 
   loader = new Loader();
