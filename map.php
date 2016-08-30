@@ -1,4 +1,4 @@
-<? # Kirby Map Plugin
+<?php # Kirby Map Plugin
 
 $kirby->set('field', 'map', __DIR__ . '/fields/map');
 
