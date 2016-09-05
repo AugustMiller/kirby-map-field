@@ -9,7 +9,6 @@
       'lng' => c::get('map.defaults.lng', -122.6764816),
       'zoom' => c::get('map.defaults.zoom', 1)
     );
-    $this->key = c::get('map.key', '');
   }
 
   static public $assets = array(
@@ -135,7 +134,6 @@
     $map_content = new Brick('div');
     $map_content->addClass('field-content field-google-map-ui input');
     $map_content->data($this->center);
-    $map_content->data('key', $this->key);
 
     return $map_content;
   }
