@@ -1,5 +1,6 @@
 .field-map .field-google-map-ui {
   height: 50vh;
+  padding: 0;
 }
 
   .field-map .field-google-map-ui img {
