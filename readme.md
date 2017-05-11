@@ -15,6 +15,7 @@ Unfortunately, this isn't one of the many fields available to us, out of the box
 - Support for `map` fields in file forms
 - Easy to implement (See "Getting Started", below)
 - Customizable initial position and zoom— globally and on a per-field basis
+- Compatible with Kirby 2.3.0+
 
 ![Kirby Map Field Screenshot](https://github.com/AugustMiller/kirby-map-field/raw/master/map-field.png)
 
