@@ -73,7 +73,8 @@
     this.location_fields = {
       address: this.container.find('.input-address'),
       lat: this.container.find('.map-lat'),
-      lng: this.container.find('.map-lng')
+      lng: this.container.find('.map-lng'),
+      zoom: this.container.find('.map-zoom')
     };
 
     // Google Maps Interface
@@ -84,7 +85,7 @@
           lat: parseFloat(this.location_fields.lat.val() || this.map_canvas.data('lat')),
           lng: parseFloat(this.location_fields.lng.val() || this.map_canvas.data('lng'))
         },
-        zoom: this.map_canvas.data('zoom') || 6,
+        zoom: parseInt(this.location_fields.zoom.val()) || this.map_canvas.data('zoom') || 6,
         disableDefaultUI: true,
         scrollwheel: false,
         zoomControl: true,
@@ -133,14 +134,19 @@
         _map.update_position();
       }
     })(this));
+
+    this.map.addListener('zoom_changed', (function (_map) {
+      return function (e) {
+        _map.update_position();
+      }
+    })(this));
   };
 
   MapField.prototype.geocode = function () {
     this.geocoder.geocode({'address': this.location_fields.address.val()}, (function (_map) {
       return function (results, status) {
         if (status == google.maps.GeocoderStatus.OK) {
-          _map.geocode_result = results[0].geometry.location;
-          _map.update_position();
+          _map.update_position(results[0].geometry.location);
         } else {
           alert('Sorry, the location couldn’t be found.');
         }
@@ -148,11 +154,14 @@
     })(this));
   };
 
-  MapField.prototype.update_position = function () {
-    this.location_fields.lat.val(this.geocode_result.lat());
-    this.location_fields.lng.val(this.geocode_result.lng());
-    this.pin.setPosition(this.geocode_result);
-    this.map.panTo(this.geocode_result);
+  MapField.prototype.update_position = function (to) {
+    if (!to) to = this.pin.getPosition();
+
+    this.location_fields.lat.val(to.lat());
+    this.location_fields.lng.val(to.lng());
+    this.location_fields.zoom.val(this.map.getZoom());
+    this.pin.setPosition(to);
+    this.map.panTo(to);
   };
 
   loader = new Loader();

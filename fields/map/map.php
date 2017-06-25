@@ -40,6 +40,7 @@
     $field->append($this->map());
     $field->append($this->input_lat());
     $field->append($this->input_lng());
+    $field->append($this->input_zoom());
 
     # Concatenate & Return
     return $field;
@@ -129,6 +130,28 @@
     return $lng_content;
   }
 
+  # Zoom Input
+  private function input_zoom () {
+    # Wrapper
+    $zoom_content = new Brick('div');
+    $zoom_content->addClass('field-content field-zoom hidden');
+
+    # Input (Locked: We use the map UI to update these)
+    $zoom_input = new Brick('input');
+    $zoom_input->attr('tabindex', '-1');
+    $zoom_input->attr('readonly', true);
+    $zoom_input->attr('type', 'hidden');
+    $zoom_input->attr('name', $this->name() . '[zoom]');
+    $zoom_input->addClass('input input-is-readonly map-zoom');
+    $zoom_input->attr('placeholder', l::get('fields.map.zoom', 'Zoom'));
+    $zoom_input->val($this->pick('zoom'));
+
+    # Combine & Ship It
+    $zoom_content->append($zoom_input);
+
+    return $zoom_content;
+  }
+
   # Map
   public function map () {
     $map_content = new Brick('div');
@@ -152,7 +175,7 @@
   }
 
   public function result() {
-    # Get Incoming data, which should be a nested object containing `lat`, `lng` and `address` properties
+    # Get Incoming data, which should be a nested object containing `lat`, `lng`, `zoom`, and `address` properties
     $input = parent::result();
 
     # Store as Yaml.
