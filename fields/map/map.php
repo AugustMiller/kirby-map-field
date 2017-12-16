@@ -3,7 +3,6 @@
     $this->type = 'map';
     $this->icon = 'map-marker';
     $this->label = l::get('fields.map.label', 'Place');
-    $this->placeholder = l::get('fields.map.placeholder', 'Address or Location');
     $this->map_settings = array(
       'lat' => c::get('map.defaults.lat', 45.5230622),
       'lng' => c::get('map.defaults.lng', -122.6764816),
@@ -50,6 +49,8 @@
   public function input () {
     # Use `BaseField`'s setup
     $input = parent::input();
+    $input_city = parent::input();
+    $input_zip = parent::input();
 
     # Provide a hook for the Panel's form initialization. This is a jQuery method, defined in assets/js/map.js
     $input->data('field', 'mapField');
@@ -58,15 +59,43 @@
     $location_container = new Brick('div');
     $location_container->addClass('field-content input-map');
 
-    # Field
-    $input->addClass('input-address');
-    $input->attr('name', $this->name() . '[address]');
-    $input->val($this->pick('address'));
+    # Option to separate address parts in different fields
+    if($this->separate == true){
+      # Field Address
+      $input->addClass('input-address');
+      $input->attr('name', $this->name() . '[address]');
+      $input->attr('placeholder', l::get('fields.placeholder.street', 'Street + nr'));
+      $input->val($this->pick('address'));
 
-    # Combine & Ship It
-    $location_container->append($input);
+      # Field City
+      $input_city->addClass('input-address');
+      $input_city->attr('name', $this->name() . '[city]');
+      $input_city->attr('placeholder', l::get('fields.placeholder.city', 'City'));
+      $input_city->val($this->pick('city'));
+
+      # Field Zip
+      $input_zip->addClass('input-address');
+      $input_zip->attr('name', $this->name() . '[zip]');
+      $input_zip->attr('placeholder', l::get('fields.placeholder.zip', 'Zip'));
+      $input_zip->val($this->pick('zip'));
+
+      $location_container->append($input);
+      $location_container->append($input_zip);
+      $location_container->append($input_city);
+
+    } else {
+      # Field Address
+      $input->addClass('input-address');
+      $input->attr('name', $this->name() . '[address]');
+      $input->attr('placeholder', l::get('fields.placeholder.street', 'Address or Location'));
+      $input->val($this->pick('address'));
+
+      # Combine & Ship It
+      $location_container->append($input);
+    }
+
     $location_container->append($this->icon());
-
+    
     return $location_container;
   }
 

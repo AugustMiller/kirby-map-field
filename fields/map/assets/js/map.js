@@ -111,7 +111,7 @@
 
   MapField.prototype.listen = function () {
     // Address Input
-    this.location_fields.address.on('keydown', (function (_map) {
+    this.container.find('.input-address').on('keydown', (function (_map) {
       return function (e) {
         
         if (e.keyCode == 13) {
@@ -143,7 +143,13 @@
   };
 
   MapField.prototype.geocode = function () {
-    this.geocoder.geocode({'address': this.location_fields.address.val()}, (function (_map) {
+    
+    var searchterm = [];
+    this.container.find('.input-address').each(function(e, item) {
+      searchterm.push($(item).val());
+    })
+    
+    this.geocoder.geocode({'address': searchterm.join(", ")}, (function (_map) {
       return function (results, status) {
         if (status == google.maps.GeocoderStatus.OK) {
           _map.update_position(results[0].geometry.location);
