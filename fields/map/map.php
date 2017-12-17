@@ -48,55 +48,43 @@
   # Location Input & Search
   public function input () {
     # Use `BaseField`'s setup
-    $input = parent::input();
-    $input_city = parent::input();
-    $input_zip = parent::input();
-
-    # Provide a hook for the Panel's form initialization. This is a jQuery method, defined in assets/js/map.js
-    $input->data('field', 'mapField');
-
+    
     # Container
     $location_container = new Brick('div');
     $location_container->addClass('field-content input-map');
 
-    # Option to separate address parts in different fields
-    if($this->separate == true){
-      # Field Address
-      $input->addClass('input-address');
-      $input->attr('name', $this->name() . '[address]');
-      $input->attr('placeholder', l::get('fields.placeholder.street', 'Street + nr'));
-      $input->val($this->pick('address'));
+    if(isset($this->fields)){
+      # If fields are specified, list them all
+      foreach($this->fields as $key => $value){
+        $input = $this->address_field($key, $value);
 
-      # Field City
-      $input_city->addClass('input-address');
-      $input_city->attr('name', $this->name() . '[city]');
-      $input_city->attr('placeholder', l::get('fields.placeholder.city', 'City'));
-      $input_city->val($this->pick('city'));
+        # If this is the first field:
+        # Provide a hook for the Panel's form initialization. This is a jQuery method, defined in assets/js/map.js
+        if($location_container->html() == "")
+        $input->data('field', 'mapField');
 
-      # Field Zip
-      $input_zip->addClass('input-address');
-      $input_zip->attr('name', $this->name() . '[zip]');
-      $input_zip->attr('placeholder', l::get('fields.placeholder.zip', 'Zip'));
-      $input_zip->val($this->pick('zip'));
-
-      $location_container->append($input);
-      $location_container->append($input_zip);
-      $location_container->append($input_city);
-
+        $location_container->append($input);
+      }
     } else {
-      # Field Address
-      $input->addClass('input-address');
-      $input->attr('name', $this->name() . '[address]');
-      $input->attr('placeholder', l::get('fields.placeholder.street', 'Address or Location'));
-      $input->val($this->pick('address'));
 
-      # Combine & Ship It
+      # By default we add 1 address field
+      $input = $this->address_field($input, 'address', 'Address or Location');
+      $input->data('field', 'mapField');
       $location_container->append($input);
     }
-
+    
     $location_container->append($this->icon());
     
     return $location_container;
+  }
+
+  private function address_field($field, $label){
+      $input = parent::input();
+      $input->addClass('input-address');
+      $input->attr('name', $this->name() . '[' . $field .']');
+      $input->attr('placeholder', l::get('fields.placeholder.' . $field, $label));
+      $input->val($this->pick($field));
+      return $input;
   }
 
   # Search Button
