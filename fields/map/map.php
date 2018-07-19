@@ -98,6 +98,7 @@
     $lat_input = new Brick('input');
     $lat_input->attr('tabindex', '-1');
     $lat_input->attr('readonly', true);
+    $lat_input->attr('disabled', $this->disabled());
     $lat_input->attr('name', $this->name() . '[lat]');
     $lat_input->addClass('input input-split-left input-is-readonly map-lat');
     $lat_input->attr('placeholder', l::get('fields.map.latitude', 'Latitude'));
@@ -119,6 +120,7 @@
     $lng_input = new Brick('input');
     $lng_input->attr('tabindex', '-1');
     $lng_input->attr('readonly', true);
+    $lng_input->attr('disabled', $this->disabled());
     $lng_input->attr('name', $this->name() . '[lng]');
     $lng_input->addClass('input input-split-right input-is-readonly map-lng');
     $lng_input->attr('placeholder', l::get('fields.map.longitude', 'Longitude'));
@@ -140,6 +142,7 @@
     $zoom_input = new Brick('input');
     $zoom_input->attr('tabindex', '-1');
     $zoom_input->attr('readonly', true);
+    $zoom_input->attr('disabled', $this->disabled());
     $zoom_input->attr('type', 'hidden');
     $zoom_input->attr('name', $this->name() . '[zoom]');
     $zoom_input->addClass('input input-is-readonly map-zoom');
