@@ -179,10 +179,10 @@
 
   public function result() {
     # Get Incoming data, which should be a nested object containing `lat`, `lng`, `zoom`, and `address` properties
-    $input = parent::result();
-
-    # Store as Yaml.
-    return yaml::encode($input);
+    if ($input = parent::result()) {
+      # Store as Yaml.
+      return yaml::encode($input);
+    }
 
     # This ends up as a text block when stored inside a Structure field. Really, it's plain text anywhere it's stored— but the effect is only noticeable there. The truth is that Structure fields are stored as "plain text," as-is, which may be the only way to legitimately implement nested structures. For example, how do we "stop" YAML from being parsed at a certain hierarchical level?
   }
