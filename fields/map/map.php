@@ -3,7 +3,6 @@
     $this->type = 'map';
     $this->icon = 'map-marker';
     $this->label = l::get('fields.map.label', 'Place');
-    $this->placeholder = l::get('fields.map.placeholder', 'Address or Location');
     $this->map_settings = array(
       'lat' => c::get('map.defaults.lat', 45.5230622),
       'lng' => c::get('map.defaults.lng', -122.6764816),
@@ -49,25 +48,43 @@
   # Location Input & Search
   public function input () {
     # Use `BaseField`'s setup
-    $input = parent::input();
-
-    # Provide a hook for the Panel's form initialization. This is a jQuery method, defined in assets/js/map.js
-    $input->data('field', 'mapField');
-
+    
     # Container
     $location_container = new Brick('div');
     $location_container->addClass('field-content input-map');
 
-    # Field
-    $input->addClass('input-address');
-    $input->attr('name', $this->name() . '[address]');
-    $input->val($this->pick('address'));
+    if(isset($this->fields)){
+      # If fields are specified, list them all
+      foreach($this->fields as $key => $value){
+        $input = $this->address_field($key, $value);
 
-    # Combine & Ship It
-    $location_container->append($input);
+        # If this is the first field:
+        # Provide a hook for the Panel's form initialization. This is a jQuery method, defined in assets/js/map.js
+        if($location_container->html() == "")
+        $input->data('field', 'mapField');
+
+        $location_container->append($input);
+      }
+    } else {
+
+      # By default we add 1 address field
+      $input = $this->address_field($input, 'address', 'Address or Location');
+      $input->data('field', 'mapField');
+      $location_container->append($input);
+    }
+    
     $location_container->append($this->icon());
-
+    
     return $location_container;
+  }
+
+  private function address_field($field, $label){
+      $input = parent::input();
+      $input->addClass('input-address');
+      $input->attr('name', $this->name() . '[' . $field .']');
+      $input->attr('placeholder', l::get('fields.placeholder.' . $field, $label));
+      $input->val($this->pick($field));
+      return $input;
   }
 
   # Search Button
